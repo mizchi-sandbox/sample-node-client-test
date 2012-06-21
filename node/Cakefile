@@ -1,0 +1,47 @@
+{spawn, exec} = require 'child_process'
+fs = require 'fs'
+_ = require 'underscore'
+
+rootDir = './test'
+
+isDir  = (f) -> fs.statSync(f).isDirectory()
+isFile = (f) -> fs.statSync(f).isFile()
+
+# Traverse given directory recursively and return all files
+#
+filesInDir = (dir) ->
+  if isDir dir
+    files = fs.readdirSync dir
+    _.flatten _.map files, (f) ->
+      path = dir + '/' + f
+      if isFile path
+        path
+      else
+        filesInDir path
+  else
+    throw 'root is not directory'
+
+# Test files
+getTestedFiles = ->
+  _.reject filesInDir('test'), (path) ->
+    path.match /spec_helper/
+
+option '-f', '--file [FILE]', 'tested file; if given, other files are not tested'
+
+run = (cmd, args)->
+  proc = spawn cmd, args
+  proc.stderr.pipe process.stderr, end:false
+  proc.stdout.pipe process.stdout, end:false
+  proc.on 'exit', (status) ->
+    process.kill(1) if status isnt 0
+
+task 'test', 'mocha test', (options) ->
+  files = if options.file then [options.file] else getTestedFiles()
+  run 'node_modules/mocha/bin/mocha', [
+    '--compilers', 'coffee:coffee-script'
+    '-r', 'should'
+    '--reporter', 'spec'
+    '-t', '8000'
+    '--ignore-leaks'
+    files...
+  ]

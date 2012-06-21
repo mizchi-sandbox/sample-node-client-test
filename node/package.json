@@ -1,0 +1,20 @@
+{
+  "author": "",
+  "name": "sample",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {
+    "mocha": "*",
+    "underscore": "*",
+    "coffee-script": "*",
+    "jsdom": "*",
+    "should": "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
