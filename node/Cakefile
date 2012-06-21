@@ -22,7 +22,7 @@ filesInDir = (dir) ->
     throw 'root is not directory'
 
 # Test files
-getTestedFiles = ->
+getFilesToBeTested = ->
   _.reject filesInDir('test'), (path) ->
     path.match /spec_helper/
 
@@ -36,7 +36,7 @@ run = (cmd, args)->
     process.kill(1) if status isnt 0
 
 task 'test', 'mocha test', (options) ->
-  files = if options.file then [options.file] else getTestedFiles()
+  files = if options.file then [options.file] else getFilesToBeTested()
   run 'node_modules/mocha/bin/mocha', [
     '--compilers', 'coffee:coffee-script'
     '-r', 'should'
