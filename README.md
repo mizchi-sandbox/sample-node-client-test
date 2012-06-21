@@ -1,4 +1,4 @@
-# Smaple Clinet JS Test with Node
+# Sample Clinet JS Test with Node
 
 this is sample 
 
